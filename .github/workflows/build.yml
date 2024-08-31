@@ -9,7 +9,7 @@ jobs:
      steps:
        - name: Hello World
          run: echo "Hello world"
-  script-execution:
+  Info-Job:
      runs-on: ubuntu-latest
      steps:
        - name: Checkout code
@@ -22,6 +22,13 @@ jobs:
               pwd
               git --version
               tree
+  script-execution:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v3
+      - name: script execution
+        run: bash script.sh
          
        
       
