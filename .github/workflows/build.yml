@@ -12,6 +12,8 @@ jobs:
   script-execution:
      runs-on: ubuntu-latest
      steps:
+       - name: Checkout code
+         uses: actions/checkout@v3
        - name: Displaying the info
          run: |
               echo "Printing the outputs about the runner"
