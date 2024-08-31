@@ -9,6 +9,17 @@ jobs:
      steps:
        - name: Hello World
          run: echo "Hello world"
-       
+  script-execution:
+     runs-on: ubuntu-latest
+     steps:
+       - name: Displaying the info
+         run: |
+              echo "Printing the outputs about the runner"
+              ls -la
+              whoami
+              pwd
+              git --version
+              tree
+         
        
       
