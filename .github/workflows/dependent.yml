@@ -1,0 +1,20 @@
+name: Dependent Job
+
+on:
+  workflow_dispatch:
+  
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Hello I am from $GITHUB.JOB"
+  build:
+    #needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Hello I am from $GITHUB.JOB"
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Hello I am from $GITHUB.JOB"
