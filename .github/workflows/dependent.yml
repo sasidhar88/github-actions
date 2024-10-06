@@ -7,14 +7,14 @@ jobs:
   setup:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Hello I am from $GITHUB.JOB"
+      - run: echo "Hello I am from ${{ job.name }}"
   build:
     #needs: setup
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Hello I am from $GITHUB.JOB"
+      - run: echo "Hello I am from ${{ job.name }}"
   test:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Hello I am from $GITHUB.JOB"
+      - run: echo "Hello I am from ${{ job.name }}"
