@@ -17,7 +17,7 @@ jobs:
         id: set-runner
         run: |
           echo "Started......"
-          echo " ${{ CHANGE_TARGET }}"
+          echo " ${{ github.event.pull_request.base.ref }} "
           if [[ "${{ github.ref }}" == "main" ]]; then
             echo "runner=df-0" >> $GITHUB_OUTPUT
             echo "::set-output name=runner::df-0"
