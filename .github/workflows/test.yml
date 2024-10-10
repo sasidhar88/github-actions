@@ -16,6 +16,8 @@ jobs:
       - name: Set Runner Dynamically
         id: set-runner
         run: |
+          echo "Started......"
+          echo " ${{ CHANGE_TARGET }}"
           if [[ "${{ github.ref }}" == "main" ]]; then
             echo "runner=df-0" >> $GITHUB_OUTPUT
             echo "::set-output name=runner::df-0"
