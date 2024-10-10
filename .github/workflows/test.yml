@@ -44,3 +44,28 @@ jobs:
         - name: Print the runner name
           run: |
             echo  "${{ needs.job1.outputs.runner }}"
+
+        - name: Checkout code
+          uses: actions/checkout@v2
+
+        - name: Get changed folders
+          id: get-changes
+          run: |
+            echo "Finding changes in the config folder..."
+            # Get the list of changed directories in the config folder
+            CHANGED_DIRS=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} -- config/ | grep '/' | cut -d '/' -f 1 | sort -u)
+            
+            # Output the changed directories
+            echo "Changed directories: $CHANGED_DIRS"
+            
+            # Set the output for use in later steps
+            echo "changed_dirs=${CHANGED_DIRS}" >> $GITHUB_OUTPUT
+
+        - name: Iterate over changed folders
+          run: |
+           echo "Iterating over changed directories..."
+           for dir in ${{ steps.get-changes.outputs.changed_dirs }}; do
+             echo "Changed directory: $dir"
+             # You can add further processing here for each changed directory
+           done
+
