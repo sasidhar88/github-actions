@@ -10,7 +10,7 @@ jobs:
   job1:
     runs-on: ubuntu-latest
     outputs:
-      selected-runner: ${{ steps.set-runner.outputs.runner }}
+      runner: ${{ steps.set-runner.outputs.runner }}
 
     steps:
       - name: Set Runner Dynamically
