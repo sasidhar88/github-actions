@@ -31,3 +31,14 @@ jobs:
         run: |
           echo "Printing the runner picked..."
           echo "Runner: ${{ steps.set-runner.outputs.runner }}"
+
+
+  job2:
+      needs:
+        - job1
+      runs-on: ${{ needs.job1.outputs.runner }}
+
+      steps:
+        - name: Print the runner name
+          run: |
+            echo  "${{ needs.job1.outputs.runner }}"
