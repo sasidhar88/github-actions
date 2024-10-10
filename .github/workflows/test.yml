@@ -54,7 +54,7 @@ jobs:
             echo "Finding changes in the config folder..."
             # Get the list of changed directories in the config folder
             CHANGED_DIRS=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} -- config/ | grep '/' | cut -d '/' -f 1 | sort -u)
-            
+            git diff --name-only ${{ github.event.before }} ${{ github.sha }} -- config/ | grep '/' | cut -d '/' -f 1 | sort -u
             # Output the changed directories
             echo "Changed directories: $CHANGED_DIRS"
             
