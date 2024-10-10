@@ -54,16 +54,22 @@ jobs:
         - name: Get changed folders in config
           id: get-changes
           run: |
-            echo "Finding changes in the config folder..."
-            CHANGED_DIRS=$(git diff --name-only origin/main ${GITHUB_SHA} -- config/ | grep '^config/' | cut -d '/' -f 2 | sort -u)
-  
-            # Output the changed directories
-            if [ -z "$CHANGED_DIRS" ]; then
-              echo "No changed directories in the config folder."
-            else
-              echo "Changed directories: $CHANGED_DIRS"
-              echo "changed_dirs=${CHANGED_DIRS}" >> $GITHUB_OUTPUT
-            fi
+           echo "Finding changes in the config folder..."
+           CHANGED_DIRS=$(git diff --name-only origin/main ${GITHUB_SHA} -- config/ | grep '^config/' | cut -d '/' -f 2 | sort -u)
+           
+           # Collect changed directories into a single string
+           if [ -z "$CHANGED_DIRS" ]; then
+             echo "No changed directories in the config folder."
+             echo "changed_dirs=" >> $GITHUB_OUTPUT
+           else
+             echo "Changed directories: $CHANGED_DIRS"
+             
+             # Join the directories into a comma-separated list
+             IFS=',' read -r -a DIR_ARRAY <<< "$CHANGED_DIRS"
+             DIR_OUTPUT=$(printf "%s\n" "${DIR_ARRAY[@]}" | paste -sd "," -)
+             
+             echo "changed_dirs=${DIR_OUTPUT}" >> $GITHUB_OUTPUT
+           fi
 
 
         - name: Iterate over changed folders
