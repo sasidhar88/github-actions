@@ -71,11 +71,10 @@ jobs:
              echo "changed_dirs=${DIR_OUTPUT}" >> $GITHUB_OUTPUT
            fi
 
-
-        - name: Iterate over changed folders
-          run: |
             echo "Iterating over changed directories..."
-            for dir in ${{ steps.get-changes.outputs.changed_dirs }}; do
+            for dir in ${DIR_ARRAY[@]}; do
               echo "Changed top-level folder: $dir"
               # Further processing for each changed directory can be done here
             done
+
+
