@@ -1,0 +1,31 @@
+name: Testing Dynamic Runner
+
+on:
+ workflow_dispatch:
+ pull_request:
+  branches:
+    - main
+    - test
+jobs:
+  job1:
+    runs-on: ubuntu-latest
+    outputs:
+      selected-runner: ${{ steps.set-runner.outputs.runner }}
+
+    steps:
+      - name: Set Runner Dynamically
+        id: set-runner
+        run: |
+          if [[ "${GITHUB_REF##*/}" == "main" ]]; then
+            echo "runner=df-0" >> $GITHUB_ENV
+            echo "::set-output name=runner::df-0"
+          elif [[ "${GITHUB_REF##*/}" == "test-1" ]]; then
+            echo "runner=df-1" >> $GITHUB_ENV
+            echo "::set-output name=runner::df-1"
+          else
+            echo "None of the above matched........"
+          fi
+      - name: Printing the runner
+        run: |
+          echo "Printing the runner picked..."
+          echo "Runner: ${{ steps.set-runner.outputs.runner }}"
