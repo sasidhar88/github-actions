@@ -48,24 +48,22 @@ jobs:
         - name: Checkout code
           uses: actions/checkout@v2
 
-        - name: Get changed folders
+        - name: Fetch base branch
+          run: |
+            BASE_BRANCH=${{ github.event.pull_request.base.ref }}
+            git fetch origin $BASE_BRANCH
+
+        - name: Get changed folders in config
           id: get-changes
           run: |
             echo "Finding changes in the config folder..."
-            # Get the list of changed directories in the config folder
-            CHANGED_DIRS=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} -- config/ | grep '/' | cut -d '/' -f 1 | sort -u)
-            git diff --name-only ${{ github.event.before }} ${{ github.sha }} -- config/ | grep '/' | cut -d '/' -f 1 | sort -u
-            # Output the changed directories
-            echo "Changed directories: $CHANGED_DIRS"
+            CHANGED_DIRS=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }}...${{ github.sha }} -- config/ | grep '/' | cut -d '/' -f 1 | sort -u)
             
-            # Set the output for use in later steps
-            echo "changed_dirs=${CHANGED_DIRS}" >> $GITHUB_OUTPUT
-
-        - name: Iterate over changed folders
-          run: |
-           echo "Iterating over changed directories..."
-           for dir in ${{ steps.get-changes.outputs.changed_dirs }}; do
-             echo "Changed directory: $dir"
-             # You can add further processing here for each changed directory
-           done
+            # Output the changed directories
+            if [ -z "$CHANGED_DIRS" ]; then
+              echo "No changed directories in the config folder."
+            else
+              echo "Changed directories: $CHANGED_DIRS"
+              echo "changed_dirs=${CHANGED_DIRS}" >> $GITHUB_OUTPUT
+            fi
 
