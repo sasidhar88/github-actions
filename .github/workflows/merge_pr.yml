@@ -16,6 +16,8 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Merge PR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Use the GITHUB_TOKEN provided by GitHub Actions
         run: |
           echo "Merging the pull request..."
           PR_NUMBER=${{ github.event.pull_request.number }}
