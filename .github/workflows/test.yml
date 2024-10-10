@@ -48,16 +48,14 @@ jobs:
         - name: Checkout code
           uses: actions/checkout@v2
 
-        - name: Fetch base branch
-          run: |
-            BASE_BRANCH=${{ github.event.pull_request.base.ref }}
-            git fetch origin $BASE_BRANCH
+        - name: Fetch all branches
+          run: git fetch --all
 
         - name: Get changed folders in config
           id: get-changes
           run: |
             echo "Finding changes in the config folder..."
-            CHANGED_DIRS=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }}...${{ github.sha }} -- config/ | grep '/' | cut -d '/' -f 1 | sort -u)
+            CHANGED_DIRS=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }} ${GITHUB_SHA} -- config/ | grep '/' | cut -d '/' -f 1 | sort -u)
             
             # Output the changed directories
             if [ -z "$CHANGED_DIRS" ]; then
@@ -66,4 +64,3 @@ jobs:
               echo "Changed directories: $CHANGED_DIRS"
               echo "changed_dirs=${CHANGED_DIRS}" >> $GITHUB_OUTPUT
             fi
-
