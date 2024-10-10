@@ -17,10 +17,10 @@ jobs:
         id: set-runner
         run: |
           if [[ "${GITHUB_REF##*/}" == "main" ]]; then
-            echo "runner=df-0" >> $GITHUB_ENV
+            echo "runner=df-0" >> $GITHUB_OUTPUT
             echo "::set-output name=runner::df-0"
           elif [[ "${GITHUB_REF##*/}" == "test-1" ]]; then
-            echo "runner=df-1" >> $GITHUB_ENV
+            echo "runner=df-1" >> $GITHUB_OUTPUT
             echo "::set-output name=runner::df-1"
           else
             echo "None of the above matched........"
