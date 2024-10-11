@@ -3,8 +3,10 @@ name: Merge PR Workflow
 on:
   pull_request:
     branches:
-      - main
-      - test
+      - prod_eu
+      - prod
+      - uat
+      - uat_eu
     paths:
      - 'config/**'
 
