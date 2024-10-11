@@ -4,3 +4,4 @@ java --version
 docker --version
 node --version
 python3 --version
+echo "Hello World"
