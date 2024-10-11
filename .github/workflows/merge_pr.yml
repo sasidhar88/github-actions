@@ -24,6 +24,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "Merging the pull request..."
+          echo "Base Branch: ${{ github.event.pull_request.base.ref }}"
+          echo "Target Branch: ${{ github.event.pull_request.head.ref }}"
+          echo "Merging the pull request: ${{ github.event.pull_request.number }}"
           PR_NUMBER=${{ github.event.pull_request.number }}
           gh pr merge $PR_NUMBER --merge --body "Automatically merged by GitHub Actions."
