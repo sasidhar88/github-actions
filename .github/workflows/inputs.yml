@@ -1,0 +1,16 @@
+name: Multi Select Workflow
+
+on:
+  workflow_dispatch:
+    inputs:
+      options:
+        description: 'Enter selected options (comma-separated)'
+        required: true
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print Selected Options
+        run: |
+          echo "Selected Options: ${{ github.event.inputs.options }}"
