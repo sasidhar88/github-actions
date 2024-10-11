@@ -1,0 +1,35 @@
+name: DF Autmation Workflow
+
+on:
+  pull_request:
+    branches:
+      - 'prod'
+      - 'prod_eu'
+      - 'uat'
+      - 'uat_eu'
+    paths:
+      - 'config/**'
+jobs:
+  capture-folders:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Extract folder names from changed files
+        run: |
+          echo "Changed files: ${{ github.event.pull_request.changed_files }}"
+          folders=$(echo "${{ github.event.pull_request.changed_files }}" | grep 'config/' | awk -F'/' '{print $2}' | sort -u)
+          echo "Changed folders: $folders"
+          echo "::set-output name=changed_folders::$folders"
+
+      - name: Extract folder names from changed files
+        id: extract_folders
+        run: |
+          # Get all changed files and filter for config folders
+          folders=$(echo "${{ steps.get_changed_files.outputs.all_changed_files }}" | grep '^config/' | awk -F'/' '{print $2}' | sort -u)
+
+          # Convert to an array and loop through it
+          IFS=' ' read -r -a folder_array <<< "$folders"
+          
+          for folder in "${folder_array[@]}"; do
+              echo "Changed folder: $folder"
+              # Add any additional commands you want to run for each folder here
+          done
