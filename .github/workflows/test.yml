@@ -1,0 +1,80 @@
+name: Testing Dynamic Runner
+
+on:
+ workflow_dispatch:
+ pull_request:
+  branches:
+    - main
+    - test
+  paths:
+   - 'config/**'
+jobs:
+  job1:
+    runs-on: ubuntu-latest
+    outputs:
+      runner: ${{ steps.set-runner.outputs.runner }}
+
+    steps:
+      - name: Set Runner Dynamically
+        id: set-runner
+        run: |
+          echo "Started......"
+          echo " ${{ github.event.pull_request.base.ref }} "
+          if [[ "${{ github.event.pull_request.base.ref }}" == "main" ]]; then
+            echo "runner=ubuntu-latest" >> $GITHUB_OUTPUT
+            echo "::set-output name=runner::df-0"
+          elif [[ "${{ github.event.pull_request.base.ref }}" == "test-1" ]]; then
+            echo "runner=df-1" >> $GITHUB_OUTPUT
+            echo "::set-output name=runner::ubuntu-latest"
+          else
+            echo "None of the above matched........"
+          fi
+      - name: Printing the runner
+        run: |
+          echo "Printing the runner picked..."
+          echo "Runner: ${{ steps.set-runner.outputs.runner }}"
+
+
+  job2:
+      needs:
+        - job1
+      runs-on: ${{ needs.job1.outputs.runner }}
+
+      steps:
+        - name: Print the runner name
+          run: |
+            echo  "${{ needs.job1.outputs.runner }}"
+
+        - name: Checkout code
+          uses: actions/checkout@v2
+
+        - name: Fetch all branches
+          run: git fetch --all
+
+        - name: Get changed folders in config
+          id: get-changes
+          run: |
+           echo "Finding changes in the config folder..."
+           CHANGED_DIRS=$(git diff --name-only origin/main ${GITHUB_SHA} -- config/ | grep '^config/' | cut -d '/' -f 2 | sort -u)
+           
+           # Collect changed directories into a single string
+           if [ -z "$CHANGED_DIRS" ]; then
+             echo "No changed directories in the config folder."
+             echo "changed_dirs=" >> $GITHUB_OUTPUT
+           else
+             echo "Changed directories: $CHANGED_DIRS"
+             
+             # Join the directories into a comma-separated list
+             IFS=',' read -r -a DIR_ARRAY <<< "$CHANGED_DIRS"
+             DIR_OUTPUT=$(printf "%s\n" "${DIR_ARRAY[@]}" | paste -sd "," -)
+             
+             echo "changed_dirs=${DIR_OUTPUT}" >> $GITHUB_OUTPUT
+           fi
+
+            echo "Iterating over changed directories..."
+            for dir in ${DIR_ARRAY[@]}; do
+              echo "Changed top-level folder: $dir"
+              # Further processing for each changed directory can be done here
+            done
+
+
