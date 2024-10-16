@@ -9,11 +9,11 @@ on:
 
 jobs:
   Set_Runner:
-    runs-on: ubuntu-latest
-    outputs:
-      runner: ${{ steps.set-runner.outputs.runner }}
+     runs-on: ubuntu-latest
+     outputs:
+       runner: ${{ steps.set-runner.outputs.runner }}
 
-    steps:
+     steps:
       - name: Set Runner Dynamically
         id: set-runner
         run: |
@@ -27,6 +27,7 @@ jobs:
             echo "::set-output name=runner::ubuntu-latest"
           else
             echo "None of the above matched........"
+            exit 1
           fi
       - name: Printing the runner
         run: |
@@ -36,11 +37,11 @@ jobs:
       - name: Print Selected Runner
         run: |
           echo "Selected runner is: $RUNNER_LABEL"
-          
+
   job1:
-  needs: Set_Runner
-    runs-on: ${{ needs.Set_Runner.outputs.runner }}
-    steps:
-      - name: Dynamic Runner
-        run: |
-          echo "Running on dynamic runner"
+     needs: Set_Runner
+     runs-on: ${{ needs.Set_Runner.outputs.runner }}
+     steps:
+          - name: Dynamic Runner
+            run: |
+              echo "Running on dynamic runner"
