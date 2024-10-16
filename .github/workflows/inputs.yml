@@ -19,7 +19,7 @@ jobs:
         run: |
           echo "Started......"
           echo " ${{ GITHUB.REF }} "
-          if [[ "${{ GITHUB.REF }}" == "main" ]]; then
+          if [[ "${{ GITHUB.REF }}" == "refs/heads/manual-workflow-test" ]]; then
             echo "runner=ubuntu-latest" >> $GITHUB_OUTPUT
             echo "::set-output name=runner::df-0"
           elif [[ "${{ GITHUB.REF }}" == "test-1" ]]; then
