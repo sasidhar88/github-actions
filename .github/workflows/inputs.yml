@@ -21,7 +21,7 @@ jobs:
             echo "RUNNER_LABEL=ubuntu-latest" >> $GITHUB_ENV
           elif [[ "${GITHUB_REF}" == "uat" ]] ; then
             echo "RUNNER_LABEL=ubuntu-latest" >> $GITHUB_ENV 
-          elif [[ "${GITHUB_REF}" == "uat_eu" ]]
+          elif [[ "${GITHUB_REF}" == "uat_eu" ]] ; then
             echo "RUNNER_LABEL=ubuntu-latest" >> $GITHUB_ENV
           else
             echo "Running the workflow from the different branch, hence exiting..."
