@@ -17,9 +17,9 @@ jobs:
           echo "Determining runner based on the branch..."
           if [[ "${GITHUB_REF}" == "manual-workflow-test" ]]; then
             echo "RUNNER_LABEL=ubuntu-latest" >> $GITHUB_ENV
-          elif [[ "${GITHUB_REF}" == "prod" ]]
+          elif [[ "${GITHUB_REF}" == "prod" ]] ; then
             echo "RUNNER_LABEL=ubuntu-latest" >> $GITHUB_ENV
-          elif [[ "${GITHUB_REF}" == "uat" ]]
+          elif [[ "${GITHUB_REF}" == "uat" ]] ; then
             echo "RUNNER_LABEL=ubuntu-latest" >> $GITHUB_ENV 
           elif [[ "${GITHUB_REF}" == "uat_eu" ]]
             echo "RUNNER_LABEL=ubuntu-latest" >> $GITHUB_ENV
