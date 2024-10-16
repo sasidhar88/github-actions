@@ -8,9 +8,26 @@ on:
         required: true
 
 jobs:
-  run:
+  Set_Runner:
     runs-on: ubuntu-latest
     steps:
-      - name: Print Selected Options
+      - name: Set Runner
+        id: set-runner
         run: |
-          echo "Selected Options: ${{ github.event.inputs.options }}"
+          echo "Determining runner based on the branch..."
+          if [[ "${GITHUB_REF}" == "prod_eu" ]]; then
+            echo "RUNNER_LABEL=ubuntu-latest" >> $GITHUB_ENV
+          elif [[ "${GITHUB_REF}" == "prod" ]]
+            echo "RUNNER_LABEL=ubuntu-latest" >> $GITHUB_ENV
+          elif [[ "${GITHUB_REF}" == "uat" ]]
+            echo "RUNNER_LABEL=ubuntu-latest" >> $GITHUB_ENV 
+          elif [[ "${GITHUB_REF}" == "uat_eu" ]]
+            echo "RUNNER_LABEL=ubuntu-latest" >> $GITHUB_ENV
+          else
+            echo "Running the workflow from the different branch, hence exiting..."
+          fi
+
+      - name: Print Selected Runner
+        run: |
+          echo "Selected runner is: $RUNNER_LABEL"
+      
