@@ -38,14 +38,35 @@ jobs:
         run: |
           echo "Selected runner is: $RUNNER_LABEL"
 
-  job1:
+  Script_Execution:
      needs: Set_Runner
      runs-on: ${{ needs.Set_Runner.outputs.runner }}
      steps:
-          - name: Running the script
-            run: |
-                IFS=',' read -ra DB_ARRAY <<< "${{ github.event.inputs.db_names }}"
-                for db_name in "${DB_ARRAY[@]}"; do
-                  echo "Processing database: $db_name"
-                  # Add your logic here for each db_name
-                done
+      - name: Process and transform each database name
+        run: | 
+          IFS=',' read -r -a db_array <<< "${{ github.event.inputs.db_names }}"
+          cd /home/ubuntu/data-flattening
+          git pull 
+          echo "Processing the following databases:"
+          for db in "${db_array[@]}"; do
+            # Split by "-" or "_"
+            IFS='-_ ' read -r -a parts <<< "$db"
+            echo $parts
+            # Initialize an array to hold trimmed parts
+            # trimmed_parts=()
+            # # Loop over each part and trim it to 8 characters max
+            # for part in "${parts[@]}"; do
+            #   trimmed_part=$(echo "$part" | cut -c1-8)
+            #   trimmed_parts+=("$trimmed_part")
+            # done
+            echo "$part" | cut -c1-8
+            # # Join the trimmed parts with "_"
+            # final_db_name=$(IFS=_; echo "${trimmed_parts[*]}")
+            
+            # Add prefix "df_" to the final result
+            final_db_name="df_${final_db_name}"
+            
+            # echo "Original Database: $db"
+            # echo "Transformed Database: $final_db_name"
+            # python3 drop_tables.py --tables $final_db_name
+          done
