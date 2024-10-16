@@ -15,7 +15,7 @@ jobs:
         id: set-runner
         run: |
           echo "Determining runner based on the branch..."
-          if [[ "${GITHUB_REF}" == "manual-workflow-test" ]]; then
+          if [[ "${GITHUB_REF}" == "refs/heads/manual-workflow-test" ]]; then
             echo "RUNNER_LABEL=ubuntu-latest" >> $GITHUB_ENV
           elif [[ "${GITHUB_REF}" == "prod" ]] ; then
             echo "RUNNER_LABEL=ubuntu-latest" >> $GITHUB_ENV
