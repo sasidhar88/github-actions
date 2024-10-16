@@ -3,7 +3,7 @@ name: Multi Select Workflow
 on:
   workflow_dispatch:
     inputs:
-      options:
+      db_names:
         description: 'Enter selected options (comma-separated)'
         required: true
 
@@ -42,6 +42,10 @@ jobs:
      needs: Set_Runner
      runs-on: ${{ needs.Set_Runner.outputs.runner }}
      steps:
-          - name: Dynamic Runner
+          - name: Running the script
             run: |
-              echo "Running on dynamic runner"
+                IFS=',' read -ra DB_ARRAY <<< "${{ github.event.inputs.db_names }}"
+                for db_name in "${DB_ARRAY[@]}"; do
+                  echo "Processing database: $db_name"
+                  # Add your logic here for each db_name
+                done
