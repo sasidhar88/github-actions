@@ -45,8 +45,8 @@ jobs:
       - name: Process and transform each database name
         run: | 
           IFS=',' read -r -a db_array <<< "${{ github.event.inputs.db_names }}"
-          cd /home/ubuntu/data-flattening
-          git pull 
+          # cd /home/ubuntu/data-flattening
+          # git pull 
           echo "Processing the following databases:"
           for db in "${db_array[@]}"; do
             # Split by "-" or "_"
@@ -59,12 +59,12 @@ jobs:
             #   trimmed_part=$(echo "$part" | cut -c1-8)
             #   trimmed_parts+=("$trimmed_part")
             # done
-            echo "$part" | cut -c1-8
+            # echo "$parts" | cut -c1-8
             # # Join the trimmed parts with "_"
             # final_db_name=$(IFS=_; echo "${trimmed_parts[*]}")
             
             # Add prefix "df_" to the final result
-            final_db_name="df_${final_db_name}"
+            # final_db_name="df_${final_db_name}"
             
             # echo "Original Database: $db"
             # echo "Transformed Database: $final_db_name"
