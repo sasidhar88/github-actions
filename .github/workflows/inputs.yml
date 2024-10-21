@@ -3,14 +3,70 @@ name: Multi Select Workflow
 on:
   workflow_dispatch:
     inputs:
-      options:
+      db_names:
         description: 'Enter selected options (comma-separated)'
         required: true
 
 jobs:
-  run:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Print Selected Options
+  Set_Runner:
+     runs-on: ubuntu-latest
+     outputs:
+       runner: ${{ steps.set-runner.outputs.runner }}
+
+     steps:
+      - name: Set Runner Dynamically
+        id: set-runner
         run: |
-          echo "Selected Options: ${{ github.event.inputs.options }}"
+          echo "Started......"
+          echo " ${{ GITHUB.REF }} "
+          if [[ "${{ GITHUB.REF }}" == "refs/heads/manual-workflow-test" ]]; then
+            echo "runner=ubuntu-latest" >> $GITHUB_OUTPUT
+            echo "::set-output name=runner::df-0"
+          elif [[ "${{ GITHUB.REF }}" == "test-1" ]]; then
+            echo "runner=df-1" >> $GITHUB_OUTPUT
+            echo "::set-output name=runner::ubuntu-latest"
+          else
+            echo "None of the above matched........"
+            exit 1
+          fi
+      - name: Printing the runner
+        run: |
+          echo "Printing the runner picked..."
+          echo "Runner: ${{ steps.set-runner.outputs.runner }}"
+
+      - name: Print Selected Runner
+        run: |
+          echo "Selected runner is: $RUNNER_LABEL"
+
+  Script_Execution:
+     needs: Set_Runner
+     runs-on: ${{ needs.Set_Runner.outputs.runner }}
+     steps:
+      - name: Process and transform each database name
+        run: | 
+          IFS=',' read -r -a db_array <<< "${{ github.event.inputs.db_names }}"
+          # cd /home/ubuntu/data-flattening
+          # git pull 
+          echo "Processing the following databases:"
+          for db in "${db_array[@]}"; do
+            # Split by "-" or "_"
+            IFS='-_ ' read -r -a parts <<< "$db"
+            echo $parts
+            # Initialize an array to hold trimmed parts
+            # trimmed_parts=()
+            # # Loop over each part and trim it to 8 characters max
+            # for part in "${parts[@]}"; do
+            #   trimmed_part=$(echo "$part" | cut -c1-8)
+            #   trimmed_parts+=("$trimmed_part")
+            # done
+            # echo "$parts" | cut -c1-8
+            # # Join the trimmed parts with "_"
+            # final_db_name=$(IFS=_; echo "${trimmed_parts[*]}")
+            
+            # Add prefix "df_" to the final result
+            # final_db_name="df_${final_db_name}"
+            
+            # echo "Original Database: $db"
+            # echo "Transformed Database: $final_db_name"
+            # python3 drop_tables.py --tables $final_db_name
+          done
